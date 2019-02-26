@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<style>
+    #myCanvas {
+        left: 0px;
+        top: 0px;
+        background-color: lightgrey;
+        position: absolute;
+    }
+
+    #container {
+        width: 800px;
+        height: 600px;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+    }
+
+    #ball_1,
+    #ball_2,
+    #ball_3,
+    #ball_4,
+    #ball_5 {
+        width: 50px;
+        height: 50px;
+        top: 275px;
+        position: absolute; 
+        border-radius: 50px;
+        background:  linear-gradient(0deg, rgba(147,147,147,1) 50%, rgba(255,255,255,1) 100%);
+    }
+
+    #ball_1 {
+        left: 275px;
+    }
+
+    #ball_2 {
+        left: 325px;
+    }
+
+    #ball_3 {
+        left: 375px;
+    }
+
+    #ball_4 {
+        left: 425px;
+    }
+
+    #ball_5 {
+        left: 475px;
+    }
+    
+    .shadow {
+        height: 10px;
+        width: 50px;
+        top: 100px;
+        background-color: grey;
+        position: relative;
+        border-radius: 100px / 20px;
+        -webkit-border-radius: 100px / 20px;
+        -moz-border-radius: 100px / 20px;
+        filter: blur(5px)
+    }
+    
+    #shadow_ball1 {
+        top: 375px;
+        left: 175px;
+        filter: blur(5px);
+    }
+    
+    #shadow_ball5 {
+        top: 365px;
+        left: 475px;
+        filter: blur(5px);
+    }
+    
+    
+</style>
+
+<body onload="myMove()">
+    <canvas id="myCanvas" width="800" height="600"></canvas>
+    <div id="container" style="">
+        
+        <div id="ball_1"></div>
+        <div class="shadow" id="shadow_ball1"></div>
+        
+        <div id="ball_2">
+            <div class="shadow"></div>
+        </div>
+        <div id="ball_3">
+            <div class="shadow"></div>
+        </div>
+        <div id="ball_4">
+            <div class="shadow"></div>
+        </div>
+        <div id="ball_5"></div>
+        <div class="shadow" id="shadow_ball5"></div>
+    </div>
+
+
+    <script>
+        function myMove() {
+            var grenzwert = 50;
+            var speed = 5;
+
+            var ball_1 = document.getElementById("ball_1");
+            var pos_x_ball1 = 275;
+            var pos_y_ball1 = 275;
+            var base_y_ball1 = 275;
+            var richtungLinks_ball1 = setInterval(links_ball1, speed);
+            var richtungRechts_ball1;
+            var grenze_ball1 = base_y_ball1 - grenzwert;
+
+            var ball_5 = document.getElementById("ball_5");
+            var pos_x_ball5 = 275;
+            var pos_y_ball5 = 475;
+            var base_y_ball5 = 475;
+            var richtungLinks_ball5;
+            var richtungRechts_ball5;
+            var grenze_ball5 = base_y_ball5 + grenzwert;
+            
+            var c = document.getElementById("myCanvas");
+            var ctx = c.getContext("2d");
+            
+            var x = 0.1;
+            var y = 5;
+            //var shadow_ball1 = document.getElementById("shadow_ball1");
+            
+                
+            
+
+            function zeichne() {
+
+                ctx.clearRect(0, 0, 800, 600);
+                ctx.strokeStyle = "#FFF";
+
+                ctx.beginPath();
+                ctx.moveTo(300, 0);
+                ctx.lineTo((pos_y_ball1 + 25), (pos_x_ball1 + 25));
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(350, 0);
+                ctx.lineTo(350, 275);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(400, 0);
+                ctx.lineTo(400, 275);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(450, 0);
+                ctx.lineTo(450, 275);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(500, 0);
+                ctx.lineTo((pos_y_ball5 + 25), (pos_x_ball5 + 25));
+                ctx.stroke();
+            }
+
+            
+            
+            function links_ball1() {
+                zeichne();
+                
+                pos_y_ball1--;
+                pos_x_ball1 = pos_x_ball1 - x;
+                
+                ball_1.style.left = pos_y_ball1 + 'px';
+                ball_1.style.top = pos_x_ball1 + 'px';
+                
+                y = y + 0.05;
+                shadow_ball1.style.left = pos_y_ball1 + 'px';
+                shadow_ball1.style.filter = "blur("+y+"px)";
+                
+                
+                if (pos_y_ball1 == grenze_ball1) {
+
+                    clearInterval(richtungLinks_ball1);
+                    richtungRechts_ball1 = setInterval(rechts_ball1, speed);
+
+                }
+            }
+
+            function rechts_ball1() {
+                zeichne();
+                
+                pos_y_ball1++;
+                pos_x_ball1 = pos_x_ball1 + x;
+                
+                ball_1.style.left = pos_y_ball1 + 'px';
+                ball_1.style.top = pos_x_ball1 + 'px';
+
+                y = y - 0.05;
+                shadow_ball1.style.left = pos_y_ball1 + 'px';
+                shadow_ball1.style.filter = "blur("+y+"px)";
+
+                if (pos_y_ball1 == base_y_ball1) {
+
+                    clearInterval(richtungRechts_ball1);
+                    richtungRechts_ball5 = setInterval(rechts_ball5, speed);
+
+                }
+
+            }
+
+            function rechts_ball5() {
+                zeichne();
+
+                pos_x_ball5 = pos_x_ball5 - x;
+                pos_y_ball5++;
+                
+                ball_5.style.top = pos_x_ball5 + 'px';
+                ball_5.style.left = pos_y_ball5 + 'px';
+                y = y + 0.05;
+                shadow_ball5.style.left = pos_y_ball5 + 'px';
+                shadow_ball5.style.filter = "blur("+y+"px)";
+
+                if (pos_y_ball5 == grenze_ball5) {
+
+                    clearInterval(richtungRechts_ball5);
+                    richtungLinks_ball5 = setInterval(links_ball5, speed);
+
+                }
+
+            }
+
+            function links_ball5() {
+                zeichne();
+
+                pos_x_ball5 = pos_x_ball5 + x;
+                pos_y_ball5--;
+                
+                ball_5.style.top = pos_x_ball5 + 'px';
+                ball_5.style.left = pos_y_ball5 + 'px';
+                y = y - 0.05;
+                shadow_ball5.style.left = pos_y_ball5 + 'px';
+                shadow_ball5.style.filter = "blur("+y+"px)";
+                
+                if (pos_y_ball5 == base_y_ball5) {
+
+                    clearInterval(richtungLinks_ball5);
+                    richtungLinks_ball1 = setInterval(links_ball1, speed);
+
+                }
+
+
+            }
+
+
+
+
+
+
+        }
+    </script>
+
+</body>
+
+</html>
